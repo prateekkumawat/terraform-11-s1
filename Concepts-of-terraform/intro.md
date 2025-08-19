@@ -35,3 +35,5 @@ Output.tf       ---- services output ec2 private public ip details; ELB endpoint
 terraform.tfvars --- variables values files 
 Examples of resources for aws on terraform documentations 
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc
+
+
