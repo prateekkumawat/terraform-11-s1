@@ -34,3 +34,52 @@ resource "aws_internet_gateway" "this1igw" {
     Name = "${var.infra_name}-${var.infra_env}-igw"
   }
 }
+
+# create an EIP for natgateway 
+resource "aws_eip" "this1eip" {
+  domain = "vpc"
+  tags = {
+    Name = "${var.infra_name}-${var.infra_env}-eip-natgw"
+  }
+}
+
+# create a nat gateaway 
+resource "aws_nat_gateway" "this1nat" {
+  subnet_id = aws_subnet.this1subnet1.id
+  allocation_id = aws_eip.this1eip.id
+  tags = {
+    Name = "${var.infra_name}-${var.infra_env}-natgw"
+  } 
+}
+
+resource "aws_route_table" "this1pub" {
+  vpc_id = aws_vpc.this1.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.this1igw.id 
+  }
+  tags = {
+    Name = "${var.infra_name}-${var.infra_env}-pub-rt"
+  } 
+}
+
+resource "aws_route_table" "this1pri" {
+  vpc_id = aws_vpc.this1.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.this1nat.id
+  }
+  tags = {
+    Name = "${var.infra_name}-${var.infra_env}-private-rt"
+  } 
+}
+
+resource "aws_route_table_association" "this1pub1assosiate1" {
+  route_table_id = aws_route_table.this1pub.id
+  subnet_id = aws_subnet.this1subnet1.id
+}
+
+resource "aws_route_table_association" "this1pub1assosiate2" {
+  route_table_id = aws_route_table.this1pri.id
+  subnet_id = aws_subnet.thissubnet2.id
+}
