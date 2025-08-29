@@ -27,6 +27,16 @@ resource "aws_subnet" "thissubnet2" {
   }
 }
 
+# create subnet3 for vpc 
+resource "aws_subnet" "thissubnet3" {
+  vpc_id = aws_vpc.this1.id
+  cidr_block = "10.10.3.0/24"
+  availability_zone = "ap-south-1b"
+  tags = { 
+    Name = "terraform-subnet3-az2"
+  }
+}
+
 # create internet gateway 
 resource "aws_internet_gateway" "this1igw" {
   vpc_id = aws_vpc.this1.id
