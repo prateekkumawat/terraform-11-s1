@@ -142,4 +142,5 @@ resource "aws_db_instance" "this1rds" {
   engine_version = "8.0"
   db_subnet_group_name = aws_db_subnet_group.this1dbsubnetgrp.id
   vpc_security_group_ids = [aws_db_subnet_group.this1dbsubnetgrp.id]
+  skip_final_snapshot = "false"
 }
